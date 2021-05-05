@@ -8,14 +8,14 @@ const leaderboard = document.querySelector(".leaderboard");
 // Get leaderboard data from localStorage or create empty array
 let currentLeaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 // Import audio files
-const one = new Audio('./one.mp3');
-const two = new Audio('./two.mp3');
-const three = new Audio('./three.mp3');
-const four = new Audio('./four.mp3');
+const one = new Audio("./one.mp3");
+const two = new Audio("./two.mp3");
+const three = new Audio("./three.mp3");
+const four = new Audio("./four.mp3");
 
 // Initiate variables for keeping track of game state and time
 let prevHole, gameTime, timeUp, timer, playAudio, prevAudio;
-let gameIsRunning
+let gameIsRunning;
 let score = 0;
 
 // Random number generator
@@ -95,13 +95,13 @@ function playAudioClip() {
         playAudio.currentTime = 0;
     }
     // Array of audio clips to be randomized
-    const audioArray = [one, two, three, four]
-    let audioIndex = randomInterval(0, 4)
+    const audioArray = [one, two, three, four];
+    let audioIndex = randomInterval(0, 4);
     while (audioIndex === prevAudio) {
-        audioIndex = randomInterval(0, 4)
+        audioIndex = randomInterval(0, 4);
     }
-    playAudio = audioArray[audioIndex]
-    prevAudio = audioIndex
+    playAudio = audioArray[audioIndex];
+    prevAudio = audioIndex;
     playAudio.currentTime = 0;
     playAudio.play();
 }
@@ -120,30 +120,38 @@ function hitMole(e) {
 }
 
 function populateLeaderboard(data) {
-    console.log('func', data)
-    leaderboard.innerHTML = data.sort((a, b) => a.score < b.score).slice(0, 10).map(player => {
-        return `
-        <p>#${data.indexOf(player) + 1} |  ${player.username} |  ${player.score}</p>
+    console.log(data);
+    leaderboard.innerHTML = data
+        .slice(0, 10)
+        .map((player) => {
+            return `
+        <p>#${data.indexOf(player) + 1} |  ${player.username} |  ${
+        player.score
+      }</p>
         `;
-    }).join('')
+        })
+        .join("");
 }
 
 function updateStorages(scoreData) {
-    const maxLeaderboardLength = 5
+    const maxLeaderboardLength = 5;
     // Get the current leaderboard data - if it doesn't exist then just make it an empty array
     currentLeaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    // If localStorage has info, then spread it into a new array with the new user's data / or 
-    const updatedLeaderboard = [...currentLeaderboard, scoreData] || [currentLeaderboard, scoreData];
-    // Sort by highest score 
-    updatedLeaderboard.sort((a, b) => a.score < b.score)
+    // If localStorage has info, then spread it into a new array with the new user's data / or
+    const updatedLeaderboard = [...currentLeaderboard, scoreData] || [
+        currentLeaderboard,
+        scoreData,
+    ];
+    // Sort by highest score
+    updatedLeaderboard.sort((a, b) => a.score < b.score);
     // Make sure we only store the top 10
     if (updatedLeaderboard.length > maxLeaderboardLength) {
         // Remove lowest player on the board
-        updatedLeaderboard.pop()
+        updatedLeaderboard.pop();
     }
     // Update the localstorage with our new database
     localStorage.setItem("leaderboard", JSON.stringify(updatedLeaderboard));
-    populateLeaderboard(updatedLeaderboard)
+    populateLeaderboard(updatedLeaderboard);
 }
 
 function gameOver() {
@@ -157,7 +165,7 @@ function gameOver() {
         score,
     };
     // Update our storage with above data
-    databaseUpdate(username, score)
+    databaseUpdate(username, score);
     // Clear the timer interval
     clearInterval(timer);
     // Set gamerunning boolean to false
@@ -168,48 +176,50 @@ function gameOver() {
 
 function databaseUpdate(name, score) {
     var data = {
-        'username': name,
-        'score': score
+        username: name,
+        score: score,
     };
-    var url = 'https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1';
+    var url = "https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1";
 
     fetch(url, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Success:", data);
             databaseRetreive();
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
 function databaseRetreive() {
     var query_params = new URLSearchParams({
-        'limit': 100
+        limit: 100,
     });
-    var url = 'https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1?' + query_params;
+    var url =
+        "https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1?" + query_params;
 
     fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            data.sort((a, b) => a.score < b.score)
-            console.log(data)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Success:", data);
+            data.sort((a, b) => {
+                return a.score < b.score ? 1 : -1;
+            });
             populateLeaderboard(data);
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
-databaseRetreive()
+databaseRetreive();
 // Event listeners
 
 startGameButton.addEventListener("click", startGame);
