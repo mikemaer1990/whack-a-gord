@@ -14,7 +14,7 @@ const three = new Audio("./three.mp3");
 const four = new Audio("./four.mp3");
 
 // Initiate variables for keeping track of game state and time
-let prevHole, gameTime, timeUp, timer, playAudio, prevAudio, score;
+let prevHole, gameTime, timeUp, timer, playAudio, prevAudio, username;
 let gameIsRunning;
 let score = 0;
 
