@@ -14,7 +14,7 @@ const three = new Audio("./three.mp3");
 const four = new Audio("./four.mp3");
 
 // Initiate variables for keeping track of game state and time
-let prevHole, gameTime, timeUp, timer, playAudio, prevAudio;
+let prevHole, gameTime, timeUp, timer, playAudio, prevAudio, score;
 let gameIsRunning;
 let score = 0;
 
@@ -89,22 +89,31 @@ function gameTimer() {
     }, 1000);
 }
 
+// Function to handle audio clips
 function playAudioClip() {
+    // If audio is already playing, stop it and reset the time
     if (playAudio) {
         playAudio.pause();
         playAudio.currentTime = 0;
     }
     // Array of audio clips to be randomized
     const audioArray = [one, two, three, four];
+    // Get a random audio index
     let audioIndex = randomInterval(0, 4);
+    // Keep getting a new index until we have a new one
     while (audioIndex === prevAudio) {
         audioIndex = randomInterval(0, 4);
     }
+    // Store the current audio clip in a variable
     playAudio = audioArray[audioIndex];
+    // Store the current index
     prevAudio = audioIndex;
+    // Make sure the audio clip is at 0
     playAudio.currentTime = 0;
+    // Play the audio clip
     playAudio.play();
 }
+
 // Detect mole hits
 function hitMole(e) {
     // Prevent hacks - non genuine clicks - late clicks
@@ -119,52 +128,48 @@ function hitMole(e) {
     scoreBoard.textContent = score;
 }
 
+// Populate our leaderboard with live data
 function populateLeaderboard(data) {
-    console.log(data);
+    // Set our leaderboard html to be the first 10 items of our sorted leaderboard list
     leaderboard.innerHTML = data
         .slice(0, 10)
         .map((player) => {
             return `
-        <p>#${data.indexOf(player) + 1} |  ${player.username} |  ${
-        player.score
-      }</p>
-        `;
+                <p>
+                    #${data.indexOf(player) + 1} |  ${player.username} |  ${player.score}
+                </p>
+            `;
         })
         .join("");
 }
 
-function updateStorages(scoreData) {
-    const maxLeaderboardLength = 5;
-    // Get the current leaderboard data - if it doesn't exist then just make it an empty array
-    currentLeaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    // If localStorage has info, then spread it into a new array with the new user's data / or
-    const updatedLeaderboard = [...currentLeaderboard, scoreData] || [
-        currentLeaderboard,
-        scoreData,
-    ];
-    // Sort by highest score
-    updatedLeaderboard.sort((a, b) => a.score < b.score);
-    // Make sure we only store the top 10
-    if (updatedLeaderboard.length > maxLeaderboardLength) {
-        // Remove lowest player on the board
-        updatedLeaderboard.pop();
-    }
-    // Update the localstorage with our new database
-    localStorage.setItem("leaderboard", JSON.stringify(updatedLeaderboard));
-    populateLeaderboard(updatedLeaderboard);
-}
 
+// function updateStorages(scoreData) {
+//     const maxLeaderboardLength = 5;
+//     // Get the current leaderboard data - if it doesn't exist then just make it an empty array
+//     currentLeaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+//     // If localStorage has info, then spread it into a new array with the new user's data / or
+//     const updatedLeaderboard = [...currentLeaderboard, scoreData] || [
+//         currentLeaderboard,
+//         scoreData,
+//     ];
+//     // Sort by highest score
+//     updatedLeaderboard.sort((a, b) => a.score < b.score);
+//     // Make sure we only store the top 10
+//     if (updatedLeaderboard.length > maxLeaderboardLength) {
+//         // Remove lowest player on the board
+//         updatedLeaderboard.pop();
+//     }
+//     // Update the localstorage with our new database
+//     localStorage.setItem("leaderboard", JSON.stringify(updatedLeaderboard));
+//     populateLeaderboard(updatedLeaderboard);
+// }
+
+// Function to run when game is over
 function gameOver() {
-    let username;
-    // Get the users name
     // Make sure the user enters a name
     while (!username) username = prompt("Enter your username");
-    // Create our user object to insert into localStorage
-    scoreData = {
-        username,
-        score,
-    };
-    // Update our storage with above data
+    // Update our storage with user's data
     databaseUpdate(username, score);
     // Clear the timer interval
     clearInterval(timer);
@@ -174,6 +179,7 @@ function gameOver() {
     gameTimeDisplay.innerText = "0s";
 }
 
+// Add new entries to our database
 function databaseUpdate(name, score) {
     var data = {
         username: name,
@@ -198,6 +204,7 @@ function databaseUpdate(name, score) {
         });
 }
 
+// Retreive leaderboard info
 function databaseRetreive() {
     var query_params = new URLSearchParams({
         limit: 100,
@@ -209,6 +216,7 @@ function databaseRetreive() {
         .then((response) => response.json())
         .then((data) => {
             console.log("Success:", data);
+            // Sort by highest score
             data.sort((a, b) => {
                 return a.score < b.score ? 1 : -1;
             });
@@ -219,8 +227,9 @@ function databaseRetreive() {
         });
 }
 
+// Retreive database info intially to populate leaderboard
 databaseRetreive();
-// Event listeners
 
+// Event listeners
 startGameButton.addEventListener("click", startGame);
 moles.forEach((mole) => mole.addEventListener("click", hitMole));
