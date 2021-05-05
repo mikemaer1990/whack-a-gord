@@ -199,8 +199,8 @@ function databaseRetreive() {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            data.sort((a, b) => a.score < b.score)
-            populateLeaderboard(data);
+            let sorted = data.sort((a, b) => a.score < b.score)
+            populateLeaderboard(sorted);
         })
         .catch((error) => {
             console.error('Error:', error);
