@@ -120,7 +120,8 @@ function hitMole(e) {
 }
 
 function populateLeaderboard(data) {
-    leaderboard.innerHTML = data.slice(0, 10).map(player => {
+    console.log('func', data)
+    leaderboard.innerHTML = data.sort((a, b) => a.score < b.score).slice(0, 10).map(player => {
         return `
         <p>#${data.indexOf(player) + 1} |  ${player.username} |  ${player.score}</p>
         `;
@@ -191,7 +192,7 @@ function databaseUpdate(name, score) {
 
 function databaseRetreive() {
     var query_params = new URLSearchParams({
-        'limit': 10
+        'limit': 100
     });
     var url = 'https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1?' + query_params;
 
@@ -199,8 +200,9 @@ function databaseRetreive() {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            let sorted = data.sort((a, b) => a.score < b.score)
-            populateLeaderboard(sorted);
+            data.sort((a, b) => a.score < b.score)
+            console.log(data)
+            populateLeaderboard(data);
         })
         .catch((error) => {
             console.error('Error:', error);
