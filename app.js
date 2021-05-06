@@ -83,7 +83,7 @@ function startGame() {
 function gameTimer() {
     // Stored in a variable to be cleared when game is over
     timer = setInterval(() => {
-
+        gameTime -= 1000;
         // Display updated time every second
         gameTimeDisplay.innerText = gameTime / 1000 + "s";
     }, 1000);
