@@ -181,12 +181,14 @@ function gameOver() {
 
 // Add new entries to our database
 function databaseUpdate(name, score) {
+    // Create our data object
     var data = {
         username: name,
         score: score,
     };
+    // URL to sheets api
     var url = "https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1";
-
+    // Api call for POST
     fetch(url, {
             method: "POST",
             headers: {
@@ -196,9 +198,10 @@ function databaseUpdate(name, score) {
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log("Success:", data);
+            // After updating database - get the updated database for display purposes
             databaseRetreive();
         })
+        // Catch any errors
         .catch((error) => {
             console.error("Error:", error);
         });
@@ -206,22 +209,24 @@ function databaseUpdate(name, score) {
 
 // Retreive leaderboard info
 function databaseRetreive() {
+    // Grab 100 entries
     var query_params = new URLSearchParams({
         limit: 100,
     });
+    // Api url for GET
     var url =
         "https://sheet2api.com/v1/Ag4tde5nRMSL/whack/Sheet1?" + query_params;
-
     fetch(url)
         .then((response) => response.json())
         .then((data) => {
-            console.log("Success:", data);
             // Sort by highest score
             data.sort((a, b) => {
                 return a.score < b.score ? 1 : -1;
             });
+            // Update the leaderboard with our data
             populateLeaderboard(data);
         })
+        // Catch any errors
         .catch((error) => {
             console.error("Error:", error);
         });
@@ -232,4 +237,5 @@ databaseRetreive();
 
 // Event listeners
 startGameButton.addEventListener("click", startGame);
+startGameButton.addEventListener("touchstart", startGame);
 moles.forEach((mole) => mole.addEventListener("click", hitMole));
