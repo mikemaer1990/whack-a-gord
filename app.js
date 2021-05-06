@@ -83,7 +83,7 @@ function startGame() {
 function gameTimer() {
     // Stored in a variable to be cleared when game is over
     timer = setInterval(() => {
-        gameTime -= 1000;
+
         // Display updated time every second
         gameTimeDisplay.innerText = gameTime / 1000 + "s";
     }, 1000);
@@ -142,28 +142,6 @@ function populateLeaderboard(data) {
         })
         .join("");
 }
-
-
-// function updateStorages(scoreData) {
-//     const maxLeaderboardLength = 5;
-//     // Get the current leaderboard data - if it doesn't exist then just make it an empty array
-//     currentLeaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-//     // If localStorage has info, then spread it into a new array with the new user's data / or
-//     const updatedLeaderboard = [...currentLeaderboard, scoreData] || [
-//         currentLeaderboard,
-//         scoreData,
-//     ];
-//     // Sort by highest score
-//     updatedLeaderboard.sort((a, b) => a.score < b.score);
-//     // Make sure we only store the top 10
-//     if (updatedLeaderboard.length > maxLeaderboardLength) {
-//         // Remove lowest player on the board
-//         updatedLeaderboard.pop();
-//     }
-//     // Update the localstorage with our new database
-//     localStorage.setItem("leaderboard", JSON.stringify(updatedLeaderboard));
-//     populateLeaderboard(updatedLeaderboard);
-// }
 
 // Function to run when game is over
 function gameOver() {
@@ -237,5 +215,5 @@ databaseRetreive();
 
 // Event listeners
 startGameButton.addEventListener("click", startGame);
-startGameButton.addEventListener("touchstart", startGame);
 moles.forEach((mole) => mole.addEventListener("click", hitMole));
+moles.forEach((mole) => mole.addEventListener("touchstart", hitMole));
