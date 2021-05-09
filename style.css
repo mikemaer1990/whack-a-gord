@@ -17,6 +17,7 @@ body {
   margin: 0;
   font-family: "Amatic SC", cursive;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 h1 {
