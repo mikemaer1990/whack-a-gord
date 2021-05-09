@@ -128,6 +128,7 @@ h1 {
 }
 .footer {
   position: relative;
+  bottom:0;
   margin-top: 3rem;
   width: 100%;
   height: 50px;
