@@ -2,6 +2,8 @@ html {
   box-sizing: border-box;
   font-size: 10px;
   background: #4281a4;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 *,
@@ -14,11 +16,12 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Amatic SC", cursive;
+  overflow-x: hidden;
 }
 
 h1 {
   text-align: center;
-  font-size: 10rem;
+  font-size: clamp(30px, 10rem, 10vw);
   line-height: 1;
   margin-bottom: 0;
 }
@@ -78,6 +81,7 @@ h1 {
   align-items: center;
   width: 600px;
   margin: auto;
+  margin: 4rem auto 2rem auto;
 }
 .gameOps * {
   font-family: inherit;
@@ -86,6 +90,13 @@ h1 {
 }
 .gameOps p {
   display: inline-block;
+}
+.time {
+  padding: 1.5rem 3rem;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.2);
+  line-height: 1;
+  border-radius: 1rem;
 }
 .startGameButton {
   padding: 1rem 5rem;
@@ -110,7 +121,44 @@ h1 {
 }
 .leaderboard-container {
   width: 600px;
-  margin: auto;
+  margin: 4rem auto;
   text-align: center;
   font-size: 4em;
+}
+.footer {
+  position: relative;
+  margin-top: 3rem;
+  width: 100%;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.116);
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer img {
+  margin-left: 0.75rem;
+}
+@media (max-width: 800px) {
+  #game,
+  .leaderboard-container,
+  .gameOps {
+    width: 97.5%;
+  }
+  .hole {
+    width: 30%;
+    height: auto;
+    bottom: 20px;
+  }
+  .startGameButton {
+    padding: 0.5rem 2.5rem;
+  }
+  .time {
+    padding: 0.75rem 1.5rem;
+  }
+}
+@media (max-width: 800px) and (min-width: 600px) {
+  .game {
+    margin-top: 5rem;
+  }
 }
